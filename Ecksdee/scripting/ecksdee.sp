@@ -1,13 +1,8 @@
-//Imports
+// Includes
 #include <sourcemod>
 #include <colors>
 #include <sdktools>
 #include <sdkhooks>
-
-
-
-
-
 
 //Plugin information
 public Plugin:myinfo = 
@@ -19,10 +14,9 @@ public Plugin:myinfo =
 	url = "http://glorified.eu"
 }
 
-
 /*
 
-Colors in Colors.inc
+Colours in Colors.inc
 
 Default - Works
 Darkred - Works
@@ -39,10 +33,7 @@ Orange - Works
 
 */
 
-
-
-
-//Setting up variables
+// Setting up variables
 new Handle:g_hLocked = INVALID_HANDLE;
 new Handle:g_noclip = INVALID_HANDLE;
 new Handle:g_kill = INVALID_HANDLE;
@@ -57,11 +48,11 @@ bool CSGO;
 int WATER_LIMIT;
 
 
-/*Everything in the following section is executed upon startup
-Commands, CVARs and Hooks are defined here*/
+/* Everything in the following section is executed upon startup
+Commands, CVARs and Hooks are defined here */
 public OnPluginStart()
 {
-	//Admin Commands - Only admins can run these commands
+	// Admin Commands - Only admins can run these commands
 	RegAdminCmd("sm_warmup", StartWarmup, ADMFLAG_SLAY, "Starting Warmup"); //!warmup
 	RegAdminCmd("sm_knife", StartKnife, ADMFLAG_SLAY, "Starting Knife Round"); //!knife
 	RegAdminCmd("sm_start", StartGame, ADMFLAG_SLAY, "Starting Game"); //!start
@@ -81,9 +72,9 @@ public OnPluginStart()
 	RegAdminCmd("sm_enablegod", ToggleGodModeOn, ADMFLAG_SLAY, "Enable God") //!bhop
 	RegAdminCmd("sm_disablegod", ToggleGodModeOff, ADMFLAG_SLAY, "Disable God") //!bhop
 	RegAdminCmd("sm_reset", ResetCFG, ADMFLAG_SLAY, "Reset") //!reset
-	//RegAdminCmd("sm_hopping", AutoHopper, ADMFLAG_SLAY, "hop") //!reset
+	//RegAdminCmd("sm_hopping", AutoHopper, ADMFLAG_SLAY, "hop") //!hopping
 
-	//Player Commands - Everyone can run these commands
+	// Player Commands - Everyone can run these commands
 	RegConsoleCmd("sm_ws", EcksDee, "lol") //!ws
 	RegConsoleCmd("sm_noclip", ToggleNoClip, "Noclip"); //!noclip
 	RegConsoleCmd("sm_nc", ToggleNoClip, "Noclip"); //!nc
@@ -95,12 +86,12 @@ public OnPluginStart()
 	RegConsoleCmd("sm_colors", PrintColors, "Colors") //!colors
 	RegConsoleCmd("sm_ccl", ClearLocalChat, "Clear Local Chat") //!ccl
 	
-	//Command Listeners and Hooks - Command listeners will handle pre-existing CS:GO console commands
+	// Command Listeners and Hooks - Command listeners will handle pre-existing CS:GO console commands
 	AddCommandListener(NoKill, "kill");
 	AddCommandListener(Command_JoinTeam, "jointeam");
 	HookEvent("server_cvar", Event_ServerCvar, EventHookMode_Pre);
 
-	//Creating CVARs
+	// Creating CVARs
 	g_hLocked = CreateConVar("sm_lock_teams", "0", "Enable or disable locking teams during match", FCVAR_NOTIFY);
 	g_noclip = CreateConVar("sm_noclipenable", "0", "Enable or disable noclip", FCVAR_NOTIFY);
 	g_kill = CreateConVar("sm_disablekill", "0", "Enable or disable kill command", FCVAR_NOTIFY);
@@ -133,7 +124,7 @@ public OnClientDisconnect(client)
 }
 
 
-//Help section
+// Help section
 public Action:PluginHelp(client, args)
 {
 	CPrintToChat(client, ">> {green}Help");
@@ -146,7 +137,7 @@ public Action:PluginHelp(client, args)
 	return Plugin_Handled;
 }
 
-//Colors
+// Colors
 public Action:PrintColors(client, args)
 {
 	CPrintToChat(client, ">> {default}Default - Works");
@@ -164,15 +155,16 @@ public Action:PrintColors(client, args)
 	return Plugin_Handled;
 }
 
-//Fresh
+// Fresh
 public Action:ResetCFG(client, args)
 {
+	// This needs work! Disable all players special abilities!
 	ServerCommand("exec gamemode_competitive")
 	CPrintToChatAll(">> {green}All settings reset to default")
 	ServerCommand("mp_restartgame 1")
 }
 
-//Warmup
+// Warmup
 public Action:StartWarmup(client, args)
 {
 	ServerCommand("exec warmup");
@@ -183,7 +175,7 @@ public Action:StartWarmup(client, args)
 	return Plugin_Handled;
 }
 
-//Knife Round
+// Knife Round
 public Action:StartKnife(client, args)
 {
 	ServerCommand("exec knife");
@@ -194,7 +186,7 @@ public Action:StartKnife(client, args)
 	return Plugin_Handled;
 }
 
-//Start Game
+// Start Game
 public Action:StartGame(client, args)
 {
 	ServerCommand("exec play");
@@ -205,7 +197,7 @@ public Action:StartGame(client, args)
 	return Plugin_Handled;
 }
 
-//Scramble Teams
+// Scramble Teams
 public Action:Scramble(client, args)
 {
 	ServerCommand("mp_scrambleteams");
@@ -215,7 +207,7 @@ public Action:Scramble(client, args)
 	return Plugin_Handled;
 }
 
-//Swap Teams
+// Swap Teams
 public Action:Swap(client, args)
 {
 	ServerCommand("mp_swapteams");
@@ -226,7 +218,7 @@ public Action:Swap(client, args)
 }
 
 
-//Pause Game
+// Pause Game
 public Action:PauseGame(client, args)
 {
 	ServerCommand("mp_pause_match");
@@ -236,7 +228,7 @@ public Action:PauseGame(client, args)
 }
 
 
-//Unpause Game
+// Unpause Game
 public Action:UnPauseGame(client, args)
 {
 	ServerCommand("mp_unpause_match");
@@ -246,7 +238,7 @@ public Action:UnPauseGame(client, args)
 }
 
 
-//Reload Plugin
+// Reload Plugin
 public Action:Reload(client, args)
 {
 	ServerCommand("sm plugins reload ecksdee.smx");
@@ -255,7 +247,7 @@ public Action:Reload(client, args)
 }
 
 
-//Disable "kill" command
+// Disable "kill" command
 public Action:NoKill(int client, const char[] command, int argc)
 {
 	if (GetConVarBool(g_kill))
@@ -271,7 +263,7 @@ public Action:NoKill(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }  
 
-//Suppress CVAR Changes
+// Suppress CVAR Changes
 public Action Event_ServerCvar(Event event, const char[] name, bool dontBroadcast)
 {
 	
@@ -279,7 +271,7 @@ public Action Event_ServerCvar(Event event, const char[] name, bool dontBroadcas
 	return Plugin_Continue;
 }
 
-//Enable/Disable Team Joining
+// Enable/Disable Team Joining
 public Action:Command_JoinTeam(client, const String:command[], args)
 {
 	if (client != 0)
@@ -297,7 +289,7 @@ public Action:Command_JoinTeam(client, const String:command[], args)
 	return Plugin_Continue;
 }  
 
-//Basic NoClip
+// Basic NoClip
 public Action:ToggleNoClip(client, args)
 {
 
@@ -325,7 +317,7 @@ public Action:ToggleNoClip(client, args)
 	return Plugin_Handled;
 }
 
-//Enable NoClip CVAR
+// Enable NoClip CVAR
 public Action:ToggleNoClipOn(client, args)
 {
 	ServerCommand("sm_noclipenable 1");
@@ -333,7 +325,7 @@ public Action:ToggleNoClipOn(client, args)
 	return Plugin_Handled;
 }
 
-//Disable NoClip CVAR
+// Disable NoClip CVAR
 public Action:ToggleNoClipOff(client, args)
 {
 	ServerCommand("sm_noclipenable 0");
@@ -342,7 +334,7 @@ public Action:ToggleNoClipOff(client, args)
 	return Plugin_Handled;
 }
 
-//Toggle Godmode
+// Toggle Godmode
 public Action:GodMode(client, args)
 {
 	if(GetConVarBool(g_god))
@@ -369,7 +361,7 @@ public Action:GodMode(client, args)
 	return Plugin_Handled;
 }
 
-//Enable GodMode CVAR
+// Enable GodMode CVAR
 public Action:ToggleGodModeOn(client, args)
 {
 	ServerCommand("sm_godmodeenable 1");
@@ -377,7 +369,7 @@ public Action:ToggleGodModeOn(client, args)
 	return Plugin_Handled;
 }
 
-//Disable GodMode CVAR
+// Disable GodMode CVAR
 public Action:ToggleGodModeOff(client, args)
 {
 	ServerCommand("sm_godmodeenable 0");
@@ -386,7 +378,7 @@ public Action:ToggleGodModeOff(client, args)
 	return Plugin_Handled;
 }
 
-//Enable Bhop
+// Enable Bhop
 public Action:Bhop(client, args)
 {
 	if(!GetConVarBool(g_bhop))
@@ -429,7 +421,7 @@ public Action:EcksDee(client, args)
 	return Plugin_Handled;
 }
 
-//AutoHop
+// AutoHop
 public Action:AutoHop(client, args)
 {
 	if(GetConVarBool(g_bhop))
@@ -498,28 +490,6 @@ stock bool IsValidClient(int client)
 	return IsClientInGame(client);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 
 Old, obsolete Bhop code
@@ -552,188 +522,24 @@ public Action:Bhop(client, args)
 }
 */
 
-
-
-
-
-//Clear Global Chat
+// Clear Global Chat
 public Action:ClearChat(client, args)
 {
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
-	CPrintToChatAll("");
+	for (int i = 1; i < 85; i++)
+	{
+		CPrintToChatAll("");
+		
+	}
 	return Plugin_Handled;
 }
 
-//Clear Local Chat
+// Clear Local Chat
 public Action:ClearLocalChat(client, args)
 {
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
-	CPrintToChat(client, "");
+	for (int i = 1; i < 85; i++)
+	{
+		CPrintToChat(client, "");
+		
+	}
 	return Plugin_Handled;
 }
