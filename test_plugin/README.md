@@ -1,1 +1,3 @@
-SourceMod 1.7 Minigames Plugin Test
+# Test plugin
+
+SourceMod Test Plugin to develop my Sourcepawn knowledge
