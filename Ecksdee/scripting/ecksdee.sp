@@ -5,7 +5,7 @@
 #include <sdkhooks>
 
 //Plugin information
-public Plugin:myinfo = 
+public Plugin:myinfo =
 {
 	name = "ecksdee",
 	author = "FaZe IlLuMiNaTi",
@@ -85,7 +85,7 @@ public OnPluginStart()
 	RegConsoleCmd("sm_colours", PrintColors, "Colours") //!colours
 	RegConsoleCmd("sm_colors", PrintColors, "Colors") //!colors
 	RegConsoleCmd("sm_ccl", ClearLocalChat, "Clear Local Chat") //!ccl
-	
+
 	// Command Listeners and Hooks - Command listeners will handle pre-existing CS:GO console commands
 	AddCommandListener(NoKill, "kill");
 	AddCommandListener(Command_JoinTeam, "jointeam");
@@ -101,7 +101,7 @@ public OnPluginStart()
 
 	AutoExecConfig(true, "abnerbhop");
 	hBhop = CreateConVar("sm_autohopenable", "0", "Enable/disable Plugin", FCVAR_NOTIFY|FCVAR_REPLICATED);
- 
+
 	char theFolder[40];
 	GetGameFolderName(theFolder, sizeof(theFolder));
 	CSGO = StrEqual(theFolder, "csgo");
@@ -261,12 +261,12 @@ public Action:NoKill(int client, const char[] command, int argc)
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
-}  
+}
 
 // Suppress CVAR Changes
 public Action Event_ServerCvar(Event event, const char[] name, bool dontBroadcast)
 {
-	
+
 	event.BroadcastDisabled = true;
 	return Plugin_Continue;
 }
@@ -287,7 +287,7 @@ public Action:Command_JoinTeam(client, const String:command[], args)
 	}
 
 	return Plugin_Continue;
-}  
+}
 
 // Basic NoClip
 public Action:ToggleNoClip(client, args)
@@ -393,7 +393,7 @@ public Action:Bhop(client, args)
 		CPrintToChatAll(">> {green}Bhop Enabled");
 		return Plugin_Handled;
 	}
-	else 
+	else
 	{
 		ServerCommand("sm_realbhop_enabled 0");
 		ServerCommand("sm_cvar sv_enablebunnyhopping 0");
@@ -457,7 +457,7 @@ public Action PreThink(int client)
 {
 	if(IsValidClient(client) && IsPlayerAlive(client) && g_autohopenabled[client])
 	{
-		SetEntPropFloat(client, Prop_Send, "m_flStamina", 0.0); 
+		SetEntPropFloat(client, Prop_Send, "m_flStamina", 0.0);
 	}
 }
 
@@ -473,7 +473,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		if (IsPlayerAlive(client) && buttons & IN_JUMP) //Check if player is alive and is in pressing space
 			if(!(GetEntityMoveType(client) & MOVETYPE_LADDER) && !(GetEntityFlags(client) & FL_ONGROUND)) //Check if is not in ladder and is in air
 				if(waterCheck(client) < WATER_LIMIT)
-					buttons &= ~IN_JUMP; 
+					buttons &= ~IN_JUMP;
 	return Plugin_Continue;
 }
 
@@ -490,45 +490,13 @@ stock bool IsValidClient(int client)
 	return IsClientInGame(client);
 }
 
-/*
-
-Old, obsolete Bhop code
-
-//Enable Bhop
-public Action:Bhop(client, args)
-{
-	if(!g_bhopenabled[client])
-	{
-		ServerCommand("sm_realbhop_enabled 1");
-		ServerCommand("sm_cvar sv_enablebunnyhopping 1");
-		ServerCommand("sv_staminajumpcost 0");
-		ServerCommand("sv_staminalandcost 0");
-		ServerCommand("sv_airaccelerate 12000");
-		g_bhopenabled[client] = true;
-		CPrintToChatAll(">> {green}Bhop Enabled");
-		return Plugin_Handled;
-	}
-	else 
-	{
-		ServerCommand("sm_realbhop_enabled 0");
-		ServerCommand("sm_cvar sv_enablebunnyhopping 0");
-		ServerCommand("sv_staminajumpcost .080");
-		ServerCommand("sv_staminalandcost .050");
-		ServerCommand("sv_airaccelerate 12");
-		g_bhopenabled[client] = false;
-		CPrintToChat(client, ">> {darkred}Bhop Disabled");
-		return Plugin_Handled;
-	}
-}
-*/
-
 // Clear Global Chat
 public Action:ClearChat(client, args)
 {
 	for (int i = 1; i < 85; i++)
 	{
 		CPrintToChatAll("");
-		
+
 	}
 	return Plugin_Handled;
 }
@@ -539,7 +507,7 @@ public Action:ClearLocalChat(client, args)
 	for (int i = 1; i < 85; i++)
 	{
 		CPrintToChat(client, "");
-		
+
 	}
 	return Plugin_Handled;
 }
