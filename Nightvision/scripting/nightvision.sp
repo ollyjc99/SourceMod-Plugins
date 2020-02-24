@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-public Plugin:myinfo = 
+public Plugin:myinfo =
 {
 	name = "Night Vision",
 	author = "FaZe IlLuMiNaTi",
@@ -25,7 +25,7 @@ public SpawnEvent(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:NightVision(client, const String:command[], args)
+public Action:Practice(client, const String:command[], args)
 {
 	ClientCommand(client, "nightvision"); //When the client sends the "rebuy" command, make them execute "nightvision" instead
 	return Plugin_Handled;
